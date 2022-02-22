@@ -1,0 +1,186 @@
+ {{!--
+ This template is used for the index page.
+ It can be used also as the home page or the default page.
+ --}}
+
+ {{!-- This block preloads specific assets for the index page --}}
+ {{#contentFor "preload"}}
+ <link rel="preload" href="{{asset "css/home.css"}}" as="style" />
+ <link rel="preload" href="{{asset "css/listing.css"}}" as="style" />
+ <link rel="preload" href="{{asset "js/home.js"}}" as="script" />
+ {{/contentFor}}
+
+ {{!-- This block loads specific styles for the index page --}}
+ {{#contentFor "styles"}}
+ <link rel="stylesheet" type="text/css" href="{{asset "css/home.css"}}" media="screen" />
+ <link rel="stylesheet" type="text/css" href="{{asset "css/listing.css"}}" media="screen" />
+ {{/contentFor}}
+
+ {{!-- The tag below means: insert everything in this file
+ into the {body} of the default.hbs template --}}
+ {{!< default}}
+
+ {{!-- Special header.hbs partial to generate the <header> tag --}}
+  {{> header background=@site.cover_image}}
+
+  <main class="main-wrap">
+
+  </section>
+
+  <section class="featuredstories mt-2" style="padding-top: 100px;">
+    <div class="container container-md-fluid">
+      <div class="row">
+        {{#get "posts" filter="featured:true" include="authors,tags" limit="3" as |featured|}}
+        {{#if featured}}
+        <div class="col-lg-4 pb-md-4" >
+          <div class="glide" id="glide01">
+            <div data-glide-el="track" class="glide__track">
+              <div class="glide__slides">
+                {{#foreach featured}}
+
+                <div class="card glide__slide" style="border:none;z-index: 0px;">
+                  {{#if feature_image}}
+                  <img class="card-img-top" src="{{img_url feature_image size="m"}}" loading="lazy" alt=""  style="border-radius: 0px;">
+                  {{/if}}
+
+                  <div class="card-body" style="padding: 0px;">
+                    <h6 class="card-title py-2"><a class="stretched-link" href="{{url}}" aria-label="{{title}}">{{title}} </a>
+                    </h6>
+                    <p class="card-text py-2" style="margin:0px;padding: 0px;">
+                      {{excerpt characters="120"}}
+                    </p>
+                    {{#primary_author}}
+                    <small class="py-2 text-muted"><a href="{{url}}">{{name}}</a></small>
+                    {{/primary_author}}
+                  </div>
+                </div>
+
+                {{/foreach}}
+              </div>
+            </div>
+            <div class="glide__arrows" data-glide-el="controls">
+              <button class="glide__arrow glide__arrow--left" data-glide-dir="<">prev</button>
+                <button class="glide__arrow glide__arrow--right" data-glide-dir=">">next</button>
+              </div>
+              <div class="glide__bullets" data-glide-el="controls[nav]" style="position: relative;bottom: 0;">
+                <button class="glide__bullet" data-glide-dir="=0"></button>
+                <button class="glide__bullet" data-glide-dir="=1"></button>
+                <button class="glide__bullet" data-glide-dir="=2"></button>
+              </div>
+            </div>
+          </div>
+          {{/if}}
+          {{/get}}
+
+          {{#get "posts" filter="featured:true" include="authors,tags" limit="4" as |featured|}}
+          {{#if featured}}
+          <div class="col-lg-4 col-md-6"
+          style='border: solid;border-width: 1px;border-bottom: 0px;border-top: 0px;'>
+          {{#foreach featured}}
+          <div class="card mb-3" style="max-width: 540px;border:none;z-index: 0px;">
+            <div class="row g-0">
+              <div class="col-8">
+                <div class="card-body">
+                  <h6 class="card-text small">
+                    <a class="stretched-link" href="{{url}}" aria-label="{{etitle}}">{{title}} </a>
+                  </h6>
+                  <p class="card-text" style="font-size: 0.75rem;"><small class="text-muted">{{date published_at timeago="true"}}</small></p>
+                </div>
+              </div>
+              <div class="col-4">
+                {{#if feature_image}}
+                <img class="img-fluid float-end img-thumbnail" src="{{img_url feature_image size="xs"}}" loading="lazy" alt="">
+                {{/if}}
+              </div>
+            </div>
+          </div>         
+          {{/foreach}}
+        </div>
+        {{/if}}
+        {{/get}}
+
+        <div class="col-lg-4 col-md-6">
+          <div class="d-flex justify-content-between">
+            <h6 style="font-weight:700">Headlines</h6>
+            <p><small class="text-muted"><a class="" href="/news/" aria-label="{{emore}}">More </a></small></p>
+          </div>
+          {{#get "posts"}}
+          <ul>
+            {{#foreach posts order="published_at desc" limit="11"}}
+            <li class="py-2">
+              <a class="" href="{{url}}" aria-label="{{title}}"><small>{{title}}</small></a>
+            </li>
+            {{/foreach}}
+          </ul>
+          {{/get}}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="container">
+    <hr class="">
+    <p class="py-4"><span id='date-time'></span>.</p>
+    <hr>
+  </section>
+
+  <section class="featuredtags">
+    {{#get "tags" limit="all" include="count.posts"}}
+    <div class='container'>
+      {{#foreach tags}}
+      <div class="d-flex justify-content-between">
+        <h6 style="font-weight:700">{{name}}</h6>
+        <p>
+          <small class="text-muted">
+            <a class="" href="{{url}}">View All</a>
+          </small>
+        </p>
+      </div>
+      <div  class="row">
+        {{#get "posts" order="published_at asc" filter="tag:{{slug}}" limit="3" as |featured|}}
+        {{#foreach posts}}
+        <div class="col-lg-4 col-md-6 col-sm-6">
+
+         <div class="card article-card my-4">
+          {{#if feature_image}}
+          <img class="card-img-top card-img-top" src="{{img_url feature_image size="m"}}" loading="lazy" alt="">
+          {{/if}}
+          <div class="card-body">
+            <h6 class="card-title py-4">
+              <a class="stretched-link" href="{{url}}" aria-label="{{etitle}}">{{title}} </a>
+            </h6>
+            <small class="py-2 text-muted">
+              <a href="{{primary_tag.url}}" class="m-article-card__tag">{{primary_tag.name}}</a>
+            </small>
+          </div>
+          <div class="card-footer">
+            <small class="text-muted"> 
+              <span>{{date published_at timeago="true"}}</span>
+              <span>&bull;</span>
+              <span>{{reading_time minute=(t "1 min read") minutes=(t "% min read")}}</span>
+            </small>
+          </div>
+        </div>
+
+      </div>
+      {{/foreach}}
+      {{/get}}
+    </div>
+
+    <hr>
+
+    {{/foreach}}
+  </div>
+  {{/get}}
+</section>
+</main>
+
+{{!-- The #contentFor helper here will send everything inside it up to the matching #block helper found in default.hbs --}}
+{{#contentFor "scripts"}}
+<script defer src="{{asset "js/home.js"}}"></script>
+<script>
+  var dt = new Date();
+  document.getElementById('date-time').innerHTML=dt;
+</script>
+{{/contentFor}}
+
